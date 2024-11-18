@@ -1,6 +1,9 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe"
+import dotenv from "dotenv"
+dotenv.config();
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -24,7 +27,7 @@ const placeOrder = async(req , res) => {
                 product_data:{
                     name : item.name
                 },
-                unit_amount : item.price*100*80
+                unit_amount : item.price*100
             },
             quantity : item.quantity
         }))
@@ -47,7 +50,7 @@ const placeOrder = async(req , res) => {
             cancel_url : `${frontend_url}/verify?success=false&orderId=${newOrder._id}`
         })
 
-        res.json({success : true , success_url : session.url})
+        res.json({success : true , session_url : session.url})
 
     } catch (error) {
         console.log(error)
@@ -55,4 +58,8 @@ const placeOrder = async(req , res) => {
     }
 }
 
-export {placeOrder}
+const verify = async (req, res) => {
+
+}
+
+export {placeOrder, verify}

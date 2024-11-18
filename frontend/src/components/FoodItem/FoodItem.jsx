@@ -16,9 +16,9 @@ const FoodItem = ({id, name, price, description, image}) => {
           !cartItems[id] 
           ? <img className='add' onClick={() => addToCart(id)} src = {assets.add_icon_white}/>
           : <div className="food-item-counter">
-               <img onClick={()=>removeFromCart(id)} src={assets.remove_icon_red} alt="" srcset="" />
+               <img onClick={()=>removeFromCart(id)} src={assets.remove_icon_red} alt="" srcSet="" />
                <p>{cartItems[id]}</p>
-               <img onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" srcset="" />
+               <img onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" srcSet="" />
           </div>
         }
       </div>

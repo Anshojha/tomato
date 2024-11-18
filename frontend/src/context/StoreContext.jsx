@@ -34,7 +34,7 @@ const StoreContextProvider = (props) => {
     }
 
 
-    const getTtotalItem = () => {
+    const getTtotalCartAmount = () => {
         let totalAmount = 0;
         for(const item in cartItems) {
             if(cartItems[item] > 0) {
@@ -75,7 +75,7 @@ const StoreContextProvider = (props) => {
         setCartItems,
         addToCart,
         removeFromCart,
-        getTtotalItem,
+        getTtotalCartAmount,
         url,
         token,
         setToken

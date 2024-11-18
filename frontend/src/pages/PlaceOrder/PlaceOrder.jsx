@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import './PlaceOrder.css'
 import { StoreContext } from '../../context/StoreContext'
+import axios from 'axios'
 
 const PlaceOrder = () => {
-  const { getTtotalItem, token, food_list, cartItems, url } = useContext(StoreContext)
+  const { getTtotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext)
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -16,30 +17,47 @@ const PlaceOrder = () => {
     phone: ""
   })
 
+
   const onChnageHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setData(data => ({ ...data, [name]: value }))
   }
 
-  useEffect(() => {
-    console.log(data);
-  }, [data])
 
-  const placeorder = async (event) => {
-    event.preventDefault();
-    let orderItems = [];
-    food_list.map((item) => {
-      if (cartItems[item.id] > 0) {
-        let itemInfo = item;
-        itemInfo["quantity"] = cartItems[item._id];
-        orderItems.push(itemInfo)
+    const placeOrder = async (event) => {
+      event.preventDefault();
+      let orderItems = [];
+      food_list.map((item) => {
+        if (cartItems[item._id] > 0) {
+          let itemInfo = item;
+          itemInfo["quantity"] = cartItems[item._id];
+          orderItems.push(itemInfo);
+        }
+      })
+      console.log("Thiis is the item are "+orderItems)
+      // console.log( "This is "+orderItems);
+      let orderData = {
+        address: data,
+        items: orderItems,
+        amount: getTtotalCartAmount() + 2,
       }
-    })
-  }
+
+      let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } })
+      
+      if (response.data.success) {
+        const { session_url } = response.data;
+        window.location.replace(session_url);
+      }
+      else {
+        alert("Error in placeOder")
+
+      }
+
+    }
 
   return (
-    <form on className='place-order'>
+    <form onSubmit={placeOrder} className='place-order'>
       <div className="place-order-left">
         <p className="title">Delivery information</p>
         <div className="multi-fields">
@@ -64,19 +82,19 @@ const PlaceOrder = () => {
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>₹{getTtotalItem()}</p>
+              <p>₹{getTtotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery fee</p>
-              <p>₹{getTtotalItem() === 0 ? 0 : getTtotalItem() + 40}</p>
+              <p>₹{getTtotalCartAmount() === 0 ? 0 : getTtotalCartAmount()}</p>
             </div>
             <hr />
             <div className="cart-total-details">
-              <b>Total</b><b>₹{getTtotalItem() === 0 ? 0 : getTtotalItem() + 40}</b>
+              <b>Total</b><b>₹{getTtotalCartAmount() === 0 ? 0 : getTtotalCartAmount() + 40}</b>
             </div>
           </div>
-          <button type='submit' onClick={() => navigate("/order")}>PROCCED TO PAYMENT</button>
+          <button type='submit' >PROCCED TO PAYMENT</button>
         </div>
       </div>
     </form>
