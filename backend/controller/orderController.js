@@ -59,7 +59,23 @@ const placeOrder = async(req , res) => {
 }
 
 const verify = async (req, res) => {
+    const {orderId, success} = req.body;
+    try {
+        if(success=="true") {
+            await orderModel.findByIdAndUpdate(orderId, {payment : true});
+            res.json({success : true , message : "Paid"})
+        }
+        else {
+            await orderModel.findByIdAndDelete(orderId);
+            res.json({success:false, message : "Not paid"})
+        }
+    } catch (error) {
+        res.json({success : false , message : "Erroe in the verify method of placeorder"})
+    }
+}
+
+const userOrders = async (req, res) => {
 
 }
 
-export {placeOrder, verify}
+export {placeOrder, verify, userOrders}
