@@ -30,7 +30,6 @@ const Verify = () => {
 
     <div className='verify'>
       <div className="spinner">
-
       </div>
     </div>
   )
